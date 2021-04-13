@@ -649,13 +649,13 @@ thead{
 
 @keyframes drop {
   0% {
-    transform: translateY(0vh);
+    transform: translateY(0px);
   }
   75% {
-    transform: translateY(25vh);
+    transform: translateY(155px);
   }
   100% {
-    transform: translateY(25vh);
+    transform: translateY(155px);
   }
 }
 
@@ -678,13 +678,13 @@ thead{
 
 @keyframes drop2 {
   0% {
-    transform: translateY(0vh);
+    transform: translateY(0px);
   }
   75% {
-    transform: translateY(8vh);
+    transform: translateY(42px);
   }
   100% {
-    transform: translateY(8vh);
+    transform: translateY(42px);
   }
 }
 
