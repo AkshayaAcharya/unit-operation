@@ -710,3 +710,18 @@ thead{
     opacity: 0;
   }
 }
+
+@keyframes needleMoveUp {
+	0% {left: 163px;top: 220px; rotateY: 0deg}
+	100% {left: 163px;top: 130px; rotateY: 30deg} 
+}
+
+@-webkit-keyframes needleMoveUp {
+	0% {left: 163px;top: 220px;}
+	100% {left: 163px;top: 130px;} 
+}
+
+
+
+
+

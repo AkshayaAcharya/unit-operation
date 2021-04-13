@@ -225,24 +225,23 @@ function table_to_array() {
     tempArray = [];
     $("table#dataTable tr").each(function() {
         let arrayOfThisRow = [];
-        let result = 0;
         let count = 0;
         let tableData = $(this).find('td');
         tableData.each(function() { 
             let data = Number($(this).find("input").val());
+			count = count + 1;
             if(!isNaN(data) && data!=null){
-                count = count + 1;
-				if(count == 4){
-					result = arrayOfThisRow[0]+arrayOfThisRow[1]+arrayOfThisRow[2];
+					arrayOfThisRow.push(data);
+            } else {
+				if(count == 5){
+					let result = arrayOfThisRow[0]+arrayOfThisRow[1]+arrayOfThisRow[2];
 					arrayOfThisRow.push(result);
 				}
-                else if(count == 3){
-					result = arrayOfThisRow[0]+arrayOfThisRow[1]+arrayOfThisRow[2]*10;
+                else if(count == 6){
+				    let result = (arrayOfThisRow[0]+arrayOfThisRow[1]+arrayOfThisRow[2])*10;
                     arrayOfThisRow.push(result);
-                } else {
-					arrayOfThisRow.push(data);
-				}
-            }
+                }
+			}
         });
         tempArray.push(arrayOfThisRow);
     });
@@ -267,9 +266,6 @@ function setResultTable(){
     document.getElementById("userData").innerHTML  = row;
 }
 
-
-// document.getElementById("sl").style.animation = "fade 0.2s ease-in-out  infinite";
-// document.getElementById("lf").style.animation = "fade 0.4s linear  infinite";
 
 //stop blinking arrow
 function myStopFunction() 
@@ -326,30 +322,41 @@ function motorOn(ele){
 	let url = motorStatus == true ? "url('./images/wave2.png')" : "url('./images/static.png')";
 	ele.src = source;
 	document.getElementsByClassName("tank")[0].style.backgroundImage = url;
-	makeItRain();
+	document.getElementById("needle").style.animation = "needleMoveUp 1s forwards"
+	makeItRain(motorStatus);
 }
 
-var makeItRain = function() {
-  //clear out everything
-  $('.rain').empty();
+var makeItRain = function(motorStatus) {
 
-  var increment = 0;
-  var drops = "";
-  var backDrops = "";
+	if(motorStatus) {
+		  //clear out everything
 
-  while (increment < 1000) {
+		$('.rain').empty();
+		$('.rain2').empty();
 
-    var randoHundo = (Math.floor(Math.random() * (98 - 1 + 1) + 1));
-    //random number between 5 and 2
-    var randoFiver = (Math.floor(Math.random() * (5 - 2 + 1) + 2));
-    //increment
-    increment += randoFiver;
-    //add in a new raindrop with various randomizations to certain CSS properties
-    drops += '<div class="drop" style="left: ' + increment + '%; bottom: ' + (randoFiver + randoFiver - 1 + 100) + '%; animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"><div class="stem" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div><div class="splat" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div></div>';
-	
-	  backDrops += '<div class="drop2" style="left: ' + increment + '%; bottom: ' + (randoFiver + randoFiver - 1 + 100) + '%; animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"><div class="stem" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div><div class="splat" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div></div>';
-  }
+		var increment = 0;
+		var drops = "";
+		var backDrops = "";
+	  
+		while (increment < 1000) {
+	  
+		  var randoHundo = (Math.floor(Math.random() * (98 - 1 + 1) + 1));
+		  //random number between 5 and 2
+		  var randoFiver = (Math.floor(Math.random() * (5 - 2 + 1) + 2));
+		  //increment
+		  increment += randoFiver;
+		  //add in a new raindrop with various randomizations to certain CSS properties
+		  drops += '<div class="drop" style="left: ' + increment + '%; bottom: ' + (randoFiver + randoFiver - 1 + 100) + '%; animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"><div class="stem" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div><div class="splat" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div></div>';
+		  
+			backDrops += '<div class="drop2" style="left: ' + increment + '%; bottom: ' + (randoFiver + randoFiver - 1 + 100) + '%; animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"><div class="stem" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div><div class="splat" style="animation-delay: 0.' + randoHundo + 's; animation-duration: 0.5' + randoHundo + 's;"></div></div>';
+		}
+	  
+		$('.rain.first-row').append(drops);
+		$('.rain2.second-row').append(backDrops);
+	} else {
+		$('.rain').empty();
+		$('.rain2').empty();
 
-  $('.rain.first-row').append(drops);
-  $('.rain2.second-row').append(backDrops);
+	}
+  
 }
