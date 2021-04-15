@@ -33,47 +33,51 @@ let temp=0;
         <img src="images/utube.png" style="position:absolute; left:252px; top:142.5px; width:115px; height:161px;"/>
 		<img id="valve" src="images/rotor.png" class="image" style="position:absolute; left:153px; top:256px;cursor: pointer;" onmousedown="enableMove(event)" onmousemove="mouse(event)" onmouseup="disableMove(event)"/>
 		<img src="images/motor.png" style="position:absolute; left:159px; top:353px;width: 116px;cursor: pointer"/>
-		<img id="on" src="images/on.png" style="position:absolute; left:225px; top:385px;width: 20px;cursor: pointer" onclick="motorOn(this)"/>
+		<img id="on" src="images/on.png" style="position:absolute; left:225px; top:385px;width: 20px;cursor: pointer" onclick="if(enableSetup)motorOn(this)"/>
 		<img id="flow" src="images/ss.png" style="position:absolute; left:30px; top:350px;cursor: pointer; visibility: hidden"/>
 		<div class="tank" id="waterTank"></div>
 		<div class="rain first-row"></div>
 		<div class="rain2 second-row"></div>
-		
+        <p id="rotameterReading" class="reading" style="position: absolute;left: 65px;top:165px;width: 20px">Rotameter Reading:</p>		
+        <p id="lpm" class="reading" style="position: absolute;left: 65px;top:200px;width: 20px">0.001LPM</p>		
+        <p id="h1" class="reading" style="position: absolute;left: 208px;top:170px;width: 45px">h1: 35m</p>
+		<p id="h2" class="reading" style="position: absolute;left: 358px;top:170px;width: 45px">h2: 35m</p>
 	</div>
 	<div id="popupParameters" style="position:absolute; left:561px; top:22px; border:4px solid white; border-radius:5px; width:150px; height:480px; padding:15px;">
 		<div class="divSettings">
 			<p class="settings" id="setup" onclick="showPopup(this);">Setup</p>
-			<p class="settings" id="acr" onclick="addReading()">Add current readings</p>
-			<p class="settings" id="expData" onclick="showPopup(this);">Experimental data</p>
-			<p class="settings" id="obsr" onclick="showPopup(this);">Observations</p>
+			<p class="settings locked" id="acr" onclick="addReading()">Add current readings</p>
+			<p class="settings locked" id="expData" onclick="showPopup(this);">Experimental data</p>
+			<p class="settings locked" id="obsr" onclick="showPopup(this);">Observations</p>
 			<!-- <p class="settings" id="slider"><input type="range" min=0 max=360 step=10 value = 360 onchange = "valveRotate(this)"/></p> -->
 		</div>
 	</div>
-   <p id="added" style="position:absolute; left:561px; top:450px; color:#00ff00; padding:7.5px; font-size:11px; font-weight:bold; visibility:hidden;">Added...</br>Click on "Observations"</p>
+   <p id="added" style="position:absolute; left:561px; top:450px; color:#00ff00; padding:7.5px; font-size:11px; font-weight:bold; "></p>
 </div>
 
 <div class="simsubscreen" id="canvas2" style="visibility:hidden;">
     <div class="flex-container" id="expCanvas">
-        <div id="evaluation" style="border: 1px solid #fff">
+        <div id="evaluation" style="border: 1px solid #fff; position:absolute; left:-30px; width:510px;">
             <p  class="evaluateStyle">Evaluation</p>
             <p style="text-align: center"><label for="reading">Number of sets of reading: <input id="reading" type="number" min=1 max=50 step=1 onclick="setTableRow(this)"/></label>
                 <input id="eval" type="button" value="EVALUATE" onclick="table_to_array();"
                 /></p>
-            <div class="flex-container">
+            <div class="flex-container" >
                 <div style="text-align: center; overflow-y: auto; height: 330px;">
-                    <table style="text-align: center; padding-left: 15px;" id="dataTable">
+                    <table style="text-align: center; " id="dataTable">
                     <thead>
                     <tr>
-                        <th  style="color:goldenrod;text-align: center;" colspan="4">User Value</th>
-                        <th style="color:goldenrod;text-align: center;">Simulated Value</th>
+                        <th  style="color:goldenrod;text-align: center;" colspan="5">User Value</th>
+                        <th style="color:goldenrod; text-align: center;">Simulated Value</th>
                     </tr>
                     <tr>
                         <td>Sl.No</td>
                         <td>Flow Rate per Minute</td>
-                        <td>Manometric Pressure Drop cm(CCWHg)</td>
-                        <td>Equivalent Length</td>
+                        <td>Manometric Pressure Drop, cm</td>
                         <td>ReyNolds Number</td>
-                        <td>Friction Factor(x 10<sup>4</sup></sup></td>
+                        <td>Friction Factor x 10<sup>4</sup></sup></td>
+                        <td>ReyNolds Number</td>
+                        <td>Friction Factor x 10<sup>4</sup></sup></td>
                     </tr>
                     </thead>
                         <tbody id="userData">
@@ -83,16 +87,30 @@ let temp=0;
                 </div>
             </div>
         </div>
-        <div id="data" style="border: 1px solid #fff">
+        <div id="data" style="border: 1px solid #fff; position:absolute; left:490px; width:250px;font-size: 12px">
             <p  class="evaluateStyle">Data</p>
-            <p><label for="reading">Nominal diameter of pipe: <input type="number" />
-            </label></p>
-            <p><label for="reading">Process Fluid: <input type="number" />
-            </label></p>
-            <p><label for="reading">Manometric Fluid: <input type="number" />
-            </label></p>
-            <div>
-                <p class="task" onclick="resetExperiment()">Reset Experiment</p>
+            <p>Length of pipe: <input id="length" type="number" value="1" name="view" min="1" max="50" style="width:35px;font-size: 12px" class="styleSelect"/> meter</p>
+            <p>Nominal dia of pipe: 
+                <select name="dia" id="nomDia" class="styleSelect" style="font-size: 12px">
+                    <option value="0.25 inch">0.25 inch</option>
+                    <option value="0.50 inch">0.50 inch</option>
+                    <option value="1.00 inch">1.00 inch</option>
+                    <option value="1.50 inch">1.50 inch</option>
+                </select>
+            </p>
+            <p>Process fluid:
+                <select name="proFluid" id="proFluid" class="styleSelect" style="font-size: 12px" onchange="setProcessFluid(this)">
+                    <option value="water">Water</option>
+                    <option value="kerosene">Kerosene</option>
+                </select>
+            </p>
+            <p>Manometric fluid: 
+                <select name="manoFluid" id="manoFluid" class="styleSelect" style="font-size: 12px" onchange="setManometricFluid(this)">
+                    <option value="carbonTetrachloride">Carbon tetrachloride</option>
+                    <option value="mercury">Mercury</option>
+                </select>
+            </p>
+            <p class="task" style="width: 150px;margin-left: 22px; padding-top: 15px" onclick="resetExperiment()">Reset Experiment</p>
             </div>
         </div>
     </div>
